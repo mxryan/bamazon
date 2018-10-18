@@ -1,12 +1,6 @@
-//todo: recieve and handle customer input, allow exit by 0, handle main exit conditions
-
-// requires
 const mysql = require("mysql");
 const inq = require("inquirer");
 const table = require("table");
-console.log(table);
-
-// setup db
 const db = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -24,8 +18,6 @@ function start() {
   })
 }
 
-// make initial display function
-
 function displayAll() {
   db.query("SELECT * FROM products", (err, res) => {
     const data = [
@@ -37,12 +29,9 @@ function displayAll() {
     const out = table.table(data);
     console.log(out);
     customerPurchasePrompt();
-
   });
 }
 
-
-// make inquirer interface
 function customerPurchasePrompt() {
   inq.prompt([{
     name: "itemId",
@@ -55,7 +44,6 @@ function customerPurchasePrompt() {
     message: "Quantity?:",
     validate: (val) => !isNaN(parseInt(val))
   }]).then((ans) => {
-    // check if there is enough quantity
     db.query(
       "SELECT * FROM products WHERE item_id = ?",
       [ans.itemId],
@@ -68,7 +56,6 @@ function customerPurchasePrompt() {
         } else {
           // update quantity in database
           updateQuantity(ans.itemId, res[0].quantity - ans.quantity);
-          
           console.log(`
           ---------------------------------
           Thank you. Your toal is: $${(res[0].price * ans.quantity).toFixed(2)}
