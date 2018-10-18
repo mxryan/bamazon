@@ -7,7 +7,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "",
   database: "bamazon"
-})
+});
 
 function start() {
   db.connect((err) => {
