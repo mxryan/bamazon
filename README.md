@@ -18,9 +18,15 @@ There are two programs:
 <image src="./bamazon_screenshots/customer_startup.png"/>
 **customerview.js** - "buying" an item.
 <image src="./bamazon_screenshots/customer_prompt.png"/>
+**managerview.js** - view on startup.
 <image src="./bamazon_screenshots/manager_startup.png"/>
+**managerview.js** - view all products.
 <image src="./bamazon_screenshots/manager_viewproducts.png"/>
+**managerview.js** - view low inventory.
 <image src="./bamazon_screenshots/manager_viewlowinventory.png"/>
+**managerview.js** - add to inventory.
 <image src="./bamazon_screenshots/manager_addtoinventory.png"/>
+**managerview.js** - add a new product.
 <image src="./bamazon_screenshots/manager_addnewitem.png"/>
+**managerview.js** - view all products, now with updated table.
 <image src="./bamazon_screenshots/manager_updatedtable.png"/>
