@@ -27,7 +27,9 @@ function viewProducts() {
       ]);
     }
     const out = table.table(data);
+
     console.log(out);
+    options();
   })
 }
 
@@ -46,19 +48,22 @@ function viewLowInventory() {
     }
     const out = table.table(data);
     console.log(out);
+    options();
   })
 }
 
 function addInventory(id, quant) {
   // increase the quantity of an item in inventory
-  // **need to get CURRENT quant and add desired amount to it**
-  let queryString ="SELECT quantity FROM products WHERE item_id = ?"
+  let queryString = "SELECT * FROM products WHERE item_id = ?"
   db.query(queryString, [id], (err, res) => {
     if (err) throw err;
-    quant += res[0].quantity;
+    quant = parseInt(quant);
+    quant += parseInt(res[0].quantity);
     queryString = "UPDATE products SET quantity = ? WHERE item_id = ?";
-    db.query(queryString, [quant, id], (err) => {
+    db.query(queryString, [quant, id], (err, res) => {
       if (err) throw err;
+      console.log("Success! Inventory added.")
+      options();
     });
   })
 
@@ -71,6 +76,82 @@ function addNewProduct(item, department, price, quant) {
     "VALUES (?, ?, ?, ?)";
   db.query(queryString, [item, department, price, quant], (err) => {
     if (err) throw err;
+    options();
   });
 }
-addInventory(13, 100);
+
+function askAddInventory() {
+  inq.prompt([{
+    name: "itemId",
+    type: "input",
+    message: "ID of item: ",
+    validate: (val) => !isNaN(parseInt(val))
+  }, {
+    name: "quantity",
+    type: "input",
+    message: "Quantity?:",
+    validate: (val) => !isNaN(parseInt(val))
+  }]).then((ans) => {
+    addInventory(ans.itemId, ans.quantity);
+  });
+}
+
+function askAddNewProduct() {
+  inq.prompt([{
+    type: "input",
+    name: "item",
+    message: "What is the name of the item?"
+  }, {
+    type: "input",
+    name: "department",
+    message: "What department?"
+  }, {
+    type: "input",
+    name: "price",
+    message: "What is the cost of the item?",
+    validate: ans => !isNaN(parseFloat(ans))
+  }, {
+    type: "input",
+    name: "quantity",
+    message: "How many units?",
+    validate: ans => !isNaN(parseInt(ans))
+  }]).then((ans) => {
+    // item, department, price, quant
+    addNewProduct(ans.item, ans.department, ans.price, ans.quantity);
+  });
+}
+
+function options() {
+  inq.prompt({
+    type: "list",
+    name: "choice",
+    message: "Please select an option",
+    choices: [
+      "View All Products",
+      "View Low Inventory",
+      "Add to Inventory",
+      "Add a New Product",
+      "Exit"
+    ]
+  }).then((ans) => {
+    console.log(ans);
+    switch (ans.choice.toLowerCase()) {
+      case "view all products":
+        viewProducts();
+        break;
+      case "view low inventory":
+        viewLowInventory();
+        break;
+      case "add to inventory":
+        askAddInventory();
+        break;
+      case "add a new product":
+        askAddNewProduct();
+        break;
+      case "exit":
+        db.end();
+        break;
+    }
+  });
+}
+options();
