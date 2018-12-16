@@ -24,7 +24,9 @@ function displayAll() {
       ["Item ID", "Product Name", "Department", "Price", "Quantity"]
     ];
     for (let i = 0; i < res.length; i++) {
-      data.push([res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].quantity]);
+      data.push(
+        [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].quantity]
+        );
     }
     const out = table.table(data);
     console.log(out);
